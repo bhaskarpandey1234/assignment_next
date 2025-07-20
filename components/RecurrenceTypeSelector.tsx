@@ -1,49 +1,35 @@
 // components/RecurrenceTypeSelector.tsx
-'use client';
-
 import React from 'react';
-import { RecurrenceType } from '../types';
+import { useRecurring } from '@/context/RecurringContext';
+import type { RecurringType } from '@/types/recurring';
 
-interface RecurrenceTypeSelectorProps {
-  selectedType: RecurrenceType;
-  onTypeChange: (type: RecurrenceType) => void;
-}
+const RecurrenceTypeSelector: React.FC = () => {
+  const { recurringType, setRecurrenceType } = useRecurring();
 
-const recurrenceTypes: Array<{
-  type: RecurrenceType;
-  label: string;
-  icon: string;
-}> = [
-  { type: 'daily', label: 'Daily', icon: '📅' },
-  { type: 'weekly', label: 'Weekly', icon: '📊' },
-  { type: 'monthly', label: 'Monthly', icon: '🗓️' },
-  { type: 'yearly', label: 'Yearly', icon: '📆' },
-];
+  const types: { value: RecurringType; label: string }[] = [
+    { value: 'daily', label: 'Daily' },
+    { value: 'weekly', label: 'Weekly' },
+    { value: 'monthly', label: 'Monthly' },
+    { value: 'yearly', label: 'Yearly' },
+  ];
 
-const RecurrenceTypeSelector: React.FC<RecurrenceTypeSelectorProps> = ({
-  selectedType,
-  onTypeChange,
-}) => {
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+    <div className="space-y-2">
+      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
         Recurrence Type
       </label>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {recurrenceTypes.map(({ type, label, icon }) => (
+      <div className="grid grid-cols-4 gap-2">
+        {types.map(({ value, label }) => (
           <button
-            key={type}
-            onClick={() => onTypeChange(type)}
-            className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all duration-200 focus-ring ${
-              selectedType === type
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
-                : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500'
+            key={value}
+            onClick={() => setRecurrenceType(value)}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+              recurringType === value
+                ? 'bg-teal-500 text-white'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
-            type="button"
           >
-            <span className="text-xl">{icon}</span>
-            <span className="text-sm font-medium">{label}</span>
+            {label}
           </button>
         ))}
       </div>
